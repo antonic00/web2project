@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "xTFEb7PPykscpJdLQcq5CEpECv08HvxBJIFsonhhJAQ=",
+  "Source": "web2server",
+  "BasePath": "_content/web2server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
