@@ -72,3 +72,12 @@ C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\runtimes\wi
 C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Antonic\Desktop\Web2\web2server\web2server\bin\Debug\net6.0\BCrypt.Net-Next.dll

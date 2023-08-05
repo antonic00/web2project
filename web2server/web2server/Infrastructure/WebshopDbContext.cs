@@ -6,6 +6,7 @@ namespace web2server.Infrastructure
     public class WebshopDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Article> Articles { get; set; }
 
         public WebshopDbContext(DbContextOptions options) : base(options)
         {
@@ -15,6 +16,8 @@ namespace web2server.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(WebshopDbContext).Assembly);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using web2server.Dtos;
 using web2server.Interfaces;
 
@@ -24,6 +25,11 @@ namespace web2server.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUserById(long id)
         {
+            if(!User.HasClaim("Id", id.ToString()))
+            {
+                return Unauthorized();
+            }
+
             return Ok(_userService.GetUserById(id));
         }
 
@@ -36,7 +42,32 @@ namespace web2server.Controllers
         [HttpPut]
         public IActionResult UpadateUser(long id, [FromBody] UserDto userDto)
         {
+            if (!User.HasClaim("Id", id.ToString()))
+            {
+                return Unauthorized();
+            }
+
             return Ok(_userService.UpdateUser(id, userDto));
+        }
+
+        [HttpPost("login")]
+        public IActionResult LoginUser([FromBody] LoginDto loginDto)
+        {
+            string token = _userService.LoginUser(loginDto);
+
+            if(token == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(token);
+        }
+
+        [HttpPost("verify")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult VerifyUser([FromBody] VerifyDto verifyDto)
+        {
+            return Ok(_userService.VerifyUser(verifyDto));
         }
     }
 }

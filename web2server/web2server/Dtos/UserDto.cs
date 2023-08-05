@@ -1,4 +1,6 @@
-﻿namespace web2server.Dtos
+﻿using web2server.Enums;
+
+namespace web2server.Dtos
 {
     public class UserDto
     {
@@ -10,5 +12,7 @@
         public string LastName { get; set; }
         public string Birthdate { get; set; }
         public string Address { get; set; }
+        public UserRole Role { get; set; }
+        public VerificationStatus? VerificationStatus { get; set; }
     }
 }

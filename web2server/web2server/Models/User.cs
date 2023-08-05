@@ -1,4 +1,6 @@
-﻿namespace web2server.Models
+﻿using web2server.Enums;
+
+namespace web2server.Models
 {
     public class User
     {
@@ -10,5 +12,8 @@
         public string LastName { get; set; }
         public string Birthdate { get; set; }
         public string Address { get; set; }
+        public UserRole Role { get; set; }
+        public VerificationStatus? VerificationStatus { get; set; }
+        public List<Article> Articles { get; set; }
     }
 }
