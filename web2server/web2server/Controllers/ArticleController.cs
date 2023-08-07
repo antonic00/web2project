@@ -42,6 +42,7 @@ namespace web2server.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
         public IActionResult CreateArticle([FromBody] ArticleDto articleDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
@@ -62,6 +63,7 @@ namespace web2server.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
         public IActionResult UpdateArticle(long id, [FromBody] ArticleDto articleDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
@@ -90,6 +92,7 @@ namespace web2server.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
         public IActionResult DeleteArticle(long id)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);

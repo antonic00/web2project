@@ -21,6 +21,12 @@ var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProf
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsVerifiedSeller", policy => policy.RequireClaim("VerificationStatus", "Accepted"));
+});
+
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
