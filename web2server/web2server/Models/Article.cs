@@ -9,5 +9,6 @@
         public string Description { get; set; }
         public long SellerId { get; set; }
         public User Seller { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }

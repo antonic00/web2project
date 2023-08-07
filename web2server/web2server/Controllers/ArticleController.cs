@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web2server.Dtos;
+using web2server.Exceptions;
 using web2server.Interfaces;
 
 namespace web2server.Controllers
@@ -25,28 +26,86 @@ namespace web2server.Controllers
         [HttpGet("{id}")]
         public IActionResult GetArticleById(long id)
         {
-            return Ok(_articleService.GetArticleById(id));
+            ArticleDto article;
+
+            try
+            {
+                article = _articleService.GetArticleById(id);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+
+            return Ok(article);
         }
 
         [HttpPost]
         [Authorize(Roles = "Seller")]
         public IActionResult CreateArticle([FromBody] ArticleDto articleDto)
         {
-            return Ok(_articleService.CreateArticle(articleDto));
+            long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+
+            ArticleDto article;
+
+            try
+            {
+                article = _articleService.CreateArticle(articleDto, userId);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(article);
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Seller")]
         public IActionResult UpdateArticle(long id, [FromBody] ArticleDto articleDto)
         {
-            return Ok(_articleService.UpdateArticle(id, articleDto));
+            long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+
+            ArticleDto article;
+
+            try
+            {
+                article = _articleService.UpdateArticle(id, articleDto, userId);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (ForbiddenActionException)
+            {
+                return Forbid();
+            }
+
+            return Ok(article);
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Seller")]
         public IActionResult DeleteArticle(long id)
         {
-            _articleService.DeleteArticle(id);
+            long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+
+            try
+            {
+                _articleService.DeleteArticle(id, userId);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (ForbiddenActionException)
+            {
+                return Forbid();
+            }
 
             return Ok();
         }

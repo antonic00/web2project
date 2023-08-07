@@ -6,8 +6,8 @@ namespace web2server.Interfaces
     {
         List<ArticleDto> GetAllArticles();
         ArticleDto GetArticleById(long id);
-        ArticleDto CreateArticle(ArticleDto articleDto);
-        ArticleDto UpdateArticle(long id, ArticleDto articleDto);
-        void DeleteArticle(long id);
+        ArticleDto CreateArticle(ArticleDto articleDto, long userId);
+        ArticleDto UpdateArticle(long id, ArticleDto articleDto, long userId);
+        void DeleteArticle(long id, long userId);
     }
 }

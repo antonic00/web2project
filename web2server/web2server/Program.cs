@@ -23,6 +23,7 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Konfiguracija za Swagger
 builder.Services.AddEndpointsApiExplorer();

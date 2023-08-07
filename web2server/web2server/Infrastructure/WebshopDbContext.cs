@@ -7,6 +7,7 @@ namespace web2server.Infrastructure
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public WebshopDbContext(DbContextOptions options) : base(options)
         {

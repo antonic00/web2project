@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "BNktfovnZcWeyPPfPfkUFq3M9hbWzJ9WOmmuNe8wmh0NLlGBFFA2XbkXFz1BvlMFXfUxyE6B+otnUX3jCzS55Q==",
+  "dgSpecHash": "opbIUMNLijwtHjlmL7CQ5BI0FPABJF971FhU2N6y+X8LcOzBTyQa7oHerHjA0delLovJXi20M+liuCjoEqyMGg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Antonic\\Desktop\\Web2\\web2server\\web2server\\web2server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Antonic\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
+    "C:\\Users\\Antonic\\.nuget\\packages\\entityframeworkcore.exceptions.common\\6.0.3\\entityframeworkcore.exceptions.common.6.0.3.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\google.protobuf\\3.21.9\\google.protobuf.3.21.9.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\k4os.compression.lz4\\1.3.5\\k4os.compression.lz4.1.3.5.nupkg.sha512",
@@ -43,6 +44,8 @@
     "C:\\Users\\Antonic\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\mysql.data\\8.1.0\\mysql.data.8.1.0.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\mysql.entityframeworkcore\\7.0.5\\mysql.entityframeworkcore.7.0.5.nupkg.sha512",
+    "C:\\Users\\Antonic\\.nuget\\packages\\mysqlconnector\\2.2.5\\mysqlconnector.2.2.5.nupkg.sha512",
+    "C:\\Users\\Antonic\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\7.0.0\\pomelo.entityframeworkcore.mysql.7.0.0.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\Antonic\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",

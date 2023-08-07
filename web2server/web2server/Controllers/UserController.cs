@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web2server.Dtos;
+using web2server.Exceptions;
 using web2server.Interfaces;
 
 namespace web2server.Controllers
@@ -25,18 +26,39 @@ namespace web2server.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUserById(long id)
         {
-            if(!User.HasClaim("Id", id.ToString()))
+            UserDto user;
+
+            try
             {
-                return Unauthorized();
+                user = _userService.GetUserById(id);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
 
-            return Ok(_userService.GetUserById(id));
+            return Ok(user);
         }
 
         [HttpPost]
         public IActionResult RegisterUser([FromBody] UserDto userDto)
         {
-            return Ok(_userService.RegisterUser(userDto));
+            UserDto user;
+
+            try
+            {
+                user = _userService.RegisterUser(userDto);
+            }
+            catch (InvalidCredentialsException e)
+            {
+                return Conflict(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(user);
         }
 
         [HttpPut]
@@ -44,20 +66,43 @@ namespace web2server.Controllers
         {
             if (!User.HasClaim("Id", id.ToString()))
             {
-                return Unauthorized();
+                return Forbid();
             }
 
-            return Ok(_userService.UpdateUser(id, userDto));
+            UserDto user;
+
+            try
+            {
+                user = _userService.UpdateUser(id, userDto);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(user);
         }
 
         [HttpPost("login")]
         public IActionResult LoginUser([FromBody] LoginDto loginDto)
         {
-            string token = _userService.LoginUser(loginDto);
+            string token;
 
-            if(token == null)
+            try
             {
-                return Unauthorized();
+                token = _userService.LoginUser(loginDto);
+            }
+            catch (InvalidCredentialsException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
             }
 
             return Ok(token);
@@ -67,7 +112,18 @@ namespace web2server.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult VerifyUser([FromBody] VerifyDto verifyDto)
         {
-            return Ok(_userService.VerifyUser(verifyDto));
+            UserDto user;
+
+            try
+            {
+                user = _userService.VerifyUser(verifyDto);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+
+            return Ok(user);
         }
     }
 }
