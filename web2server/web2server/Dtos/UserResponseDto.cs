@@ -2,7 +2,7 @@
 
 namespace web2server.Dtos
 {
-    public class UserDto
+    public class UserResponseDto
     {
         public long Id { get; set; }
         public string Username { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using web2server.Dtos;
 using web2server.Exceptions;
 using web2server.Interfaces;
+using web2server.QueryParametars;
 
 namespace web2server.Controllers
 {
@@ -18,9 +19,9 @@ namespace web2server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllOrders()
+        public IActionResult GetAllOrders([FromQuery] OrderQueryParameters queryParameters)
         {
-            return Ok(_orderService.GetAllOrders());
+            return Ok(_orderService.GetAllOrders(queryParameters));
         }
 
         [HttpGet("{id}")]
@@ -70,20 +71,26 @@ namespace web2server.Controllers
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
+            DeleteResponseDto responseDto;
+
             try
             {
-                _orderService.CancelOrder(id, userId);
+                responseDto = _orderService.CancelOrder(id, userId);
             }
             catch (ResourceNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (ForbiddenActionException)
             {
                 return Forbid();
             }
 
-            return NoContent();
+            return Ok(responseDto);
         }
     }
 }

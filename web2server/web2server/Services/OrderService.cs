@@ -6,6 +6,7 @@ using web2server.Exceptions;
 using web2server.Infrastructure;
 using web2server.Interfaces;
 using web2server.Models;
+using web2server.QueryParametars;
 
 namespace web2server.Services
 {
@@ -20,9 +21,22 @@ namespace web2server.Services
             _mapper = mapper;
         }
 
-        public List<OrderResponseDto> GetAllOrders()
+        public List<OrderResponseDto> GetAllOrders(OrderQueryParameters queryParameters)
         {
-            return _mapper.Map<List<OrderResponseDto>>(_dbContext.Orders.ToList());
+            List<Order> orders = new List<Order>();
+            if (queryParameters.BuyerId > 0)
+            {
+                orders = _dbContext.Orders.Where(x => x.BuyerId == queryParameters.BuyerId).ToList();
+            }
+            else if (queryParameters.SellerId > 0)
+            {
+                orders = _dbContext.Orders.Where(x => x.Article.SellerId == queryParameters.SellerId).ToList();
+            }
+            else
+            {
+                orders = _dbContext.Orders.ToList();
+            }
+            return _mapper.Map<List<OrderResponseDto>>(orders);
         }
 
         public OrderResponseDto GetOrderById(long id)
@@ -78,7 +92,7 @@ namespace web2server.Services
             return _mapper.Map<OrderResponseDto>(order);
         }
 
-        public void CancelOrder(long id, long userId)
+        public DeleteResponseDto CancelOrder(long id, long userId)
         {
             Order order = _dbContext.Orders.Find(id);
 
@@ -92,6 +106,11 @@ namespace web2server.Services
                 throw new ForbiddenActionException("Buyers can only cancel their own orders!");
             }
 
+            if ((DateTime.UtcNow - order.CreatedAt).Hours > 1)
+            {
+                throw new InvalidFieldsException("Orders can only be cancelled in the first hour!");
+            }
+
             Article article = _dbContext.Articles.Find(order.ArticleId);
 
             if (article == null)
@@ -103,6 +122,8 @@ namespace web2server.Services
 
             _dbContext.Orders.Remove(order);
             _dbContext.SaveChanges();
+
+            return _mapper.Map<DeleteResponseDto>(order);
         }
     }
 }

@@ -4,11 +4,11 @@ namespace web2server.Interfaces
 {
     public interface IUserService
     {
-        List<UserDto> GetAllUsers();
-        UserDto GetUserById(long id);
-        UserDto RegisterUser(UserDto userDto);
-        UserDto UpdateUser(long id, UserDto userDto);
+        List<UserResponseDto> GetAllUsers();
+        UserResponseDto GetUserById(long id);
+        UserResponseDto RegisterUser(RegisterRequestDto requestDto);
+        UserResponseDto UpdateUser(long id, UserRequestDto requestDto);
         LoginResponseDto LoginUser(LoginRequestDto requestDto);
-        UserDto VerifyUser(VerifyDto verifyDto);
+        UserResponseDto VerifyUser(VerifyDto verifyDto);
     }
 }
