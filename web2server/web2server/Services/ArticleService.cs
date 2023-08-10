@@ -5,6 +5,7 @@ using web2server.Exceptions;
 using web2server.Infrastructure;
 using web2server.Interfaces;
 using web2server.Models;
+using web2server.QueryParametars;
 
 namespace web2server.Services
 {
@@ -19,9 +20,9 @@ namespace web2server.Services
             _mapper = mapper;
         }
 
-        public ArticleDto CreateArticle(ArticleDto articleDto, long userId)
+        public ArticleResponseDto CreateArticle(ArticleRequestDto requestDto, long userId)
         {
-            Article article = _mapper.Map<Article>(articleDto);
+            Article article = _mapper.Map<Article>(requestDto);
             article.SellerId = userId;
 
             _dbContext.Articles.Add(article);
@@ -39,10 +40,10 @@ namespace web2server.Services
                 throw;
             }
 
-            return _mapper.Map<ArticleDto>(article);
+            return _mapper.Map<ArticleResponseDto>(article);
         }
 
-        public void DeleteArticle(long id, long userId)
+        public DeleteResponseDto DeleteArticle(long id, long userId)
         {
             Article article = _dbContext.Articles.Find(id);
 
@@ -58,16 +59,29 @@ namespace web2server.Services
 
             _dbContext.Articles.Remove(article);
             _dbContext.SaveChanges();
+
+            return _mapper.Map<DeleteResponseDto>(article);
         }
 
-        public List<ArticleDto> GetAllArticles()
+        public List<ArticleResponseDto> GetAllArticles(ArticleQueryParameters queryParameters)
         {
-            return _mapper.Map<List<ArticleDto>>(_dbContext.Articles.ToList());
+            List<Article> articles = new List<Article>();
+
+            if (queryParameters.SellerId > 0)
+            {
+                articles = _dbContext.Articles.Where(x => x.SellerId == queryParameters.SellerId).ToList();
+            }
+            else
+            {
+                articles = _dbContext.Articles.ToList();
+            }
+
+            return _mapper.Map<List<ArticleResponseDto>>(articles);
         }
 
-        public ArticleDto GetArticleById(long id)
+        public ArticleResponseDto GetArticleById(long id)
         {
-            ArticleDto article = _mapper.Map<ArticleDto>(_dbContext.Articles.Find(id));
+            ArticleResponseDto article = _mapper.Map<ArticleResponseDto>(_dbContext.Articles.Find(id));
 
             if (article == null)
             {
@@ -77,7 +91,7 @@ namespace web2server.Services
             return article;
         }
 
-        public ArticleDto UpdateArticle(long id, ArticleDto articleDto, long userId)
+        public ArticleResponseDto UpdateArticle(long id, ArticleRequestDto requestDto, long userId)
         {
             Article article = _dbContext.Articles.Find(id);
 
@@ -91,10 +105,7 @@ namespace web2server.Services
                 throw new ForbiddenActionException("Sellers can only modify their own articles!");
             }
 
-            article.Name = articleDto.Name;
-            article.Price = articleDto.Price;
-            article.Quantity = articleDto.Quantity;
-            article.Description = articleDto.Description;
+            _mapper.Map(requestDto, article);
 
             try
             {
@@ -109,7 +120,7 @@ namespace web2server.Services
                 throw;
             }
 
-            return _mapper.Map<ArticleDto>(article);
+            return _mapper.Map<ArticleResponseDto>(article);
         }
     }
 }

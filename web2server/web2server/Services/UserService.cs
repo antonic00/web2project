@@ -44,12 +44,12 @@ namespace web2server.Services
             return user;
         }
 
-        public string LoginUser(LoginDto loginDto)
+        public LoginResponseDto LoginUser(LoginRequestDto requestDto)
         {
-            User user = _dbContext.Users.FirstOrDefault(u => u.Email == loginDto.Email);
-            
+            User user = _dbContext.Users.FirstOrDefault(u => u.Email == requestDto.Email);
 
-            if(user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(requestDto.Password, user.Password))
             {
                 throw new InvalidCredentialsException("Incorrect login credentials!");
             }
@@ -74,7 +74,13 @@ namespace web2server.Services
                 signingCredentials: signingCredentials
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+            LoginResponseDto responseDto = new LoginResponseDto()
+            {
+                Id = user.Id,
+                Token = new JwtSecurityTokenHandler().WriteToken(securityToken)
+            };
+
+            return responseDto;
         }
 
         public UserDto RegisterUser(UserDto userDto)

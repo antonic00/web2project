@@ -9,8 +9,11 @@ namespace web2server.Mapping
         public MappingProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<Article, ArticleDto>().ReverseMap();
-            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<Article, ArticleResponseDto>();
+            CreateMap<Article, DeleteResponseDto>();
+            CreateMap<ArticleRequestDto, Article>();
+            CreateMap<Order, OrderResponseDto>();
+            CreateMap<OrderRequestDto, Order>();
         }
     }
 }
