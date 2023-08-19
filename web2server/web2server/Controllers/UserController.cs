@@ -61,7 +61,7 @@ namespace web2server.Controllers
             return Ok(user);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult UpdateUser(long id, [FromBody] UserRequestDto requestDto)
         {
             if (!User.HasClaim("Id", id.ToString()))
