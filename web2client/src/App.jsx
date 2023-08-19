@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Header />
-      <Container>
+      <Container className="mt-3">
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
