@@ -1,66 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authService from "./authService";
-import { loginResponseDto } from "../../models/loginDto";
-import { userResponseDto } from "../../models/userDto";
-
-const localUserId = localStorage.getItem("userId");
-const localAccessToken = localStorage.getItem("accessToken");
+import articlesService from "./articlesService";
+import { articleResponseDto } from "../../models/articleDto";
+import { deleteResponseDto } from "../../models/deleteDto";
 
 const initialState = {
-  userId: localUserId ? localUserId : null,
-  userInfo: null,
-  accessToken: localAccessToken ? localAccessToken : null,
+  articles: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  async (userData, thunkAPI) => {
+export const getArticles = createAsyncThunk(
+  "articles/get",
+  async (sellerId, thunkAPI) => {
     try {
-      return await authService.registerUser(userData);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        // TODO - After adding error dtos remove next line
-        (error.response && error.response.data);
-      error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const loginUser = createAsyncThunk(
-  "auth/login",
-  async (userData, thunkAPI) => {
-    try {
-      return await authService.loginUser(userData);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        // TODO - After adding error dtos remove next line
-        (error.response && error.response.data);
-      error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const getUserInfo = createAsyncThunk(
-  "auth/getUser",
-  async (_, thunkAPI) => {
-    try {
-      const accessToken = thunkAPI.getState().auth.accessToken;
-      const userId = thunkAPI.getState().auth.userId;
-      return await authService.getUserInfo(accessToken, userId);
+      return await articlesService.getArticles(sellerId);
     } catch (error) {
       const message =
         (error.response &&
@@ -74,13 +29,73 @@ export const getUserInfo = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk("auth/logout", async () => {
-  localStorage.removeItem("userId");
-  localStorage.removeItem("accessToken");
-});
+export const addArticle = createAsyncThunk(
+  "articles/add",
+  async (articleData, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      return await articlesService.addArticle(accessToken, articleData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
 
-export const authSlice = createSlice({
-  name: "auth",
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteArticle = createAsyncThunk(
+  "articles/delete",
+  async (articleId, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      return await articlesService.deleteArticle(accessToken, articleId);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const editArticle = createAsyncThunk(
+  "articles/edit",
+  async (thunkData, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      const { articleId, articleData } = thunkData;
+      return await articlesService.editArticle(
+        accessToken,
+        articleId,
+        articleData
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const articlesSlice = createSlice({
+  name: "articles",
   initialState,
   reducers: {
     resetState: (state) => {
@@ -92,61 +107,76 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state) => {
+      .addCase(getArticles.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(getArticles.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "User successfully registered!";
+        state.articles = action.payload.map((data) => articleResponseDto(data));
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(getArticles.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(loginUser.pending, (state) => {
+      .addCase(addArticle.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(addArticle.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.message = "User successfully logged in!";
+        state.message = "Article successfully added!";
 
-        const responseDto = loginResponseDto(action.payload);
-        state.userId = responseDto.id;
-        state.accessToken = responseDto.token;
-
-        localStorage.setItem("userId", state.userId);
-        localStorage.setItem("accessToken", state.accessToken);
+        const responseDto = articleResponseDto(action.payload);
+        state.articles.push(responseDto);
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(addArticle.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getUserInfo.pending, (state) => {
+      .addCase(deleteArticle.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getUserInfo.fulfilled, (state, action) => {
+      .addCase(deleteArticle.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.message = "Article successfully deleted!";
 
-        const responseDto = userResponseDto(action.payload);
-        state.userInfo = { ...responseDto };
+        const responseDto = deleteResponseDto(action.payload);
+        state.articles = state.articles.filter(
+          (article) => article.id !== responseDto.id
+        );
       })
-      .addCase(getUserInfo.rejected, (state, action) => {
+      .addCase(deleteArticle.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(logoutUser.fulfilled, (state, action) => {
-        state.userId = null;
-        state.userInfo = null;
-        state.accessToken = null;
+      .addCase(editArticle.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(editArticle.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Article successfully edited!";
+
+        const responseDto = articleResponseDto(action.payload);
+        state.articles = state.articles.map((article) => {
+          if (article.id === responseDto.id) {
+            return responseDto;
+          }
+          return article;
+        });
+      })
+      .addCase(editArticle.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
 
-export const { resetState } = authSlice.actions;
-export default authSlice.reducer;
+export const { resetState } = articlesSlice.actions;
+export default articlesSlice.reducer;
